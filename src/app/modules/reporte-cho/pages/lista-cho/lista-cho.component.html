@@ -1,0 +1,22 @@
+<div class="container">
+    <h1>Reporte</h1>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Suma Insulina Total</th>
+          <th>Promedio Nivel Glucosa</th>
+          <th>Total CHO</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of dataReporte ">
+          <td>{{ item.fecha | date:'dd/MM/yyyy' }}</td>
+          <td>{{ item.sumaInsulinaTotal }}</td>
+          <td>{{ item.promedioNivelGlucosa | number:'1.2-2' }}</td>
+          <td>{{ item.totalCho | number:'1.2-2' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

@@ -1,0 +1,9 @@
+[
+    {
+        "Ratio": 3,
+        "Sensibilidad": 13,
+        "gluMax": 150,
+        "glucoMin": 80,
+        "glucoMeta":120
+    }
+]

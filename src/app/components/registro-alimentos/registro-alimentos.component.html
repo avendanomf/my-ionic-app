@@ -1,0 +1,77 @@
+<ion-card-content>
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Alimento</th>
+          <th>Peso en gramos</th>
+          <th>Peso en tabla</th>
+          <th>CHO en tabla</th>
+          <th>Gramos de carbohidratos</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let fila of filas; let i = index">
+          <td>
+            <div [ngClass]="{'has-errorDiv': !fila.name}">
+              <div class="ng-autocompletar">
+                <ng-autocomplete [data]="alimentos" [searchKeyword]="keyword" [itemTemplate]="itemTemplate"
+                  [notFoundTemplate]="notFoundTemplate" (selected)='selectEvent(fila, $event)' #alimentosAutocomplete
+                  required>
+                </ng-autocomplete>
+              </div>
+            </div>
+          </td>
+          <td>
+            <ion-item>
+              <!-- <ion-label position="floating">Peso en gramos</ion-label> -->
+              <ion-input type="number" [(ngModel)]="fila.pesoGramos" required
+                (ionInput)="calcularCHO(fila)"></ion-input>
+            </ion-item>
+          </td>
+          <td>
+            <ion-item>
+              <!-- <ion-label position="floating">Peso en tabla</ion-label> -->
+              <ion-input type="number" [(ngModel)]="fila.pesoTabla" disabled readonly></ion-input>
+            </ion-item>
+          </td>
+          <td>
+            <ion-item>
+              <!-- <ion-label position="floating">CHO en tabla</ion-label> -->
+              <ion-input type="number" [(ngModel)]="fila.choTabla" disabled readonly></ion-input>
+            </ion-item>
+          </td>
+          <td>
+            <ion-item>
+              <!-- <ion-label position="floating">Gramos de carbohidratos</ion-label> -->
+              <ion-input type="number" [(ngModel)]="fila.gramosCarbohidratos" disabled readonly></ion-input>
+            </ion-item>
+          </td>
+          <td>
+            <ion-button color="danger" (click)="quitarFila(i)" size="small" fill="outline">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ion-card-content>
+
+<ion-card-footer>
+  <ion-button color="primary" (click)="agregarFila()" size="small" fill="outline">
+    <ion-icon name="add-outline"></ion-icon>
+    Agregar Fila
+  </ion-button>
+</ion-card-footer>
+
+<div class="ng-autocomplete">
+  <ng-template #itemTemplate let-item>
+    <a [innerHTML]="item.name"></a>
+  </ng-template>
+
+  <ng-template #notFoundTemplate let-notFound>
+    <div [innerHTML]="notFound"></div>
+  </ng-template>
+</div>

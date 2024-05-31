@@ -1,0 +1,96 @@
+<ion-card class="scroll-x-container">
+    <ion-card-header>
+        <ion-title>Registro y cálculo de CHO</ion-title>
+    </ion-card-header>
+
+    <ion-card-content>
+        <div>
+            <ion-item lines="none" class="segment-general">
+                <ion-label class="radio-label">Fecha:</ion-label>
+            </ion-item>
+            <ion-item lines="none" class="segment-general">
+                <ion-datetime-button fill="outline" datetime="datetime"></ion-datetime-button>
+            </ion-item>
+
+            <ion-item lines="none">
+                <div class="radio-segment">
+                    <ion-label class="radio-label">Comida:</ion-label>
+                    <div [ngClass]="{'segment-container': true, 'error': !registro.comida}">
+                        <ion-segment [(ngModel)]="registro.comida" required>
+                            <ion-segment-button value="Desayuno">
+                                <ion-label>Desayuno</ion-label>
+                            </ion-segment-button>
+                            <ion-segment-button value="Almuerzo">
+                                <ion-label>Almuerzo</ion-label>
+                            </ion-segment-button>
+                            <ion-segment-button value="Comida">
+                                <ion-label>Comida</ion-label>
+                            </ion-segment-button>
+                        </ion-segment>
+                    </div>
+                </div>
+            </ion-item>
+
+            <ion-card >
+                <ion-card-header>
+                    <ion-title>Registro de comidas:</ion-title>
+                </ion-card-header>
+                <ion-card-content [ngClass]="{'has-error': !validarCamposComidas()}" class="card-md">
+                    <app-registro-alimentos #registroAlimentos
+                        (totalCHOEvent)="actualizarTotalCHO($event)"></app-registro-alimentos>
+                </ion-card-content>
+            </ion-card>
+
+            <ion-item lines="none">
+                <ion-label position="stacked">Total CHO:</ion-label>
+                <ion-input type="number" [(ngModel)]="registro.totalCHO" readonly></ion-input>
+            </ion-item>
+
+            <ion-item lines="none">
+                <ion-label position="stacked">Insulina x CHO:</ion-label>
+                <ion-input type="number" [(ngModel)]="insulinas.insulinaCHO" readonly></ion-input>
+            </ion-item>
+
+            <ion-item lines="none">
+                <ion-label position="stacked">Glucometría Pre:</ion-label>
+                <ion-grid>
+                    <ion-row>
+                        <ion-col size="6">
+                            <ion-input type="number" [(ngModel)]="glucometrias.nivelGlucosa"
+                                placeholder="Nivel de glucosa" required></ion-input>
+                        </ion-col>
+                        <ion-col size="6">
+                            <ion-input type="time" [(ngModel)]="glucometrias.horaRegistro" placeholder="Hora"
+                                required></ion-input>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-item>
+
+            <ion-item lines="none">
+                <ion-label position="stacked">Insulina x Glucometría:</ion-label>
+                <ion-input type="number" [(ngModel)]="insulinas.insulinaGlucometria" readonly></ion-input>
+            </ion-item>
+
+            <ion-item lines="none">
+                <ion-label position="stacked">Total Insulina:</ion-label>
+                <ion-input type="number" [(ngModel)]="insulinas.insulinaTotal" readonly></ion-input>
+            </ion-item>
+
+            <ion-row>
+                <ion-col>
+                    <ion-button color="primary" (click)="guardarDatos()">Guardar</ion-button>
+                </ion-col>
+                <ion-col>
+                    <ion-button color="secondary" (click)="limpiarCampos()">Limpiar</ion-button>
+                </ion-col>
+            </ion-row>
+        </div>
+    </ion-card-content>
+</ion-card>
+
+<ion-modal [keepContentsMounted]="true">
+    <ng-template>
+        <ion-datetime id="datetime" [value]="fechaRegistro.toISOString()" (ionChange)="($event)"></ion-datetime>
+    </ng-template>
+</ion-modal>
