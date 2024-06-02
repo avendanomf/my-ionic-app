@@ -37,7 +37,7 @@ export class CalculoChoComponent implements OnInit {
   SaveRegistroApi: SaveRegistroApi;
   @ViewChild(ResgitroComidasComponent) registroAlimentos: RegistroAlimentosComponent | undefined;
 
-  
+
   constructor(
     private calendar: NgbCalendar,
     private parameterService: ParametersService,
@@ -68,8 +68,8 @@ export class CalculoChoComponent implements OnInit {
     this.registro.totalCHO = filas.reduce((total: number, fila: any) => total + parseFloat(fila.gramosCarbohidratos), 0);
     this.registro.comidas = filas;
     this.calcInsulinaCHO();
-    console.log('desde el hijo: ' + JSON.stringify(this.registro));
-    console.log('padre: ' + JSON.stringify(this.registro));
+    // console.log('desde el hijo: ' + JSON.stringify(this.registro));
+    // console.log('padre: ' + JSON.stringify(this.registro));
   }
   calcInsulinaCHO() {
     //console.log('totalcho: '+ this.totalCHO);
@@ -83,7 +83,7 @@ export class CalculoChoComponent implements OnInit {
   }
 
   insulinaxGluco() {
-    if (this.glucometrias.nivelGlucosa != undefined) {
+    if (this.glucometrias.nivelGlucosa != undefined && this.glucometrias.nivelGlucosa != 0) {
       this.insulinas.insulinaGlucometria = parseFloat(((this.glucometrias.nivelGlucosa - this.parameter.glucoMeta) / this.parameter.Sensibilidad).toFixed(2));
     }
     if (this.insulinas.insulinaCHO != undefined && this.insulinas.insulinaGlucometria != undefined) {
@@ -217,6 +217,7 @@ export class CalculoChoComponent implements OnInit {
   }
 
   limpiarCampos() {
+    debugger;
     this.registro = new FormRegistro(this.calendar);
     this.insulinas = new Insulinas();
     this.glucometrias = new Glucometrias();

@@ -4,50 +4,16 @@
       <thead>
         <tr>
           <th>Alimento</th>
-          <th>Peso en gramos</th>
-          <th>Peso en tabla</th>
-          <th>CHO en tabla</th>
-          <th>Gramos de carbohidratos</th>
+          <th>Peso (g)</th>
+          <th>CHO</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let fila of filas; let i = index">
-          <td>
-            <div [ngClass]="{'has-errorDiv': !fila.name}">
-              <div class="ng-autocompletar">
-                <ng-autocomplete [data]="alimentos" [searchKeyword]="keyword" [itemTemplate]="itemTemplate"
-                  [notFoundTemplate]="notFoundTemplate" (selected)='selectEvent(fila, $event)' #alimentosAutocomplete
-                  required>
-                </ng-autocomplete>
-              </div>
-            </div>
-          </td>
-          <td>
-            <ion-item>
-              <!-- <ion-label position="floating">Peso en gramos</ion-label> -->
-              <ion-input type="number" [(ngModel)]="fila.pesoGramos" required
-                (ionInput)="calcularCHO(fila)"></ion-input>
-            </ion-item>
-          </td>
-          <td>
-            <ion-item>
-              <!-- <ion-label position="floating">Peso en tabla</ion-label> -->
-              <ion-input type="number" [(ngModel)]="fila.pesoTabla" disabled readonly></ion-input>
-            </ion-item>
-          </td>
-          <td>
-            <ion-item>
-              <!-- <ion-label position="floating">CHO en tabla</ion-label> -->
-              <ion-input type="number" [(ngModel)]="fila.choTabla" disabled readonly></ion-input>
-            </ion-item>
-          </td>
-          <td>
-            <ion-item>
-              <!-- <ion-label position="floating">Gramos de carbohidratos</ion-label> -->
-              <ion-input type="number" [(ngModel)]="fila.gramosCarbohidratos" disabled readonly></ion-input>
-            </ion-item>
-          </td>
+          <td>{{ fila.name }}</td>
+          <td>{{ fila.pesoGramos }}</td>
+          <td>{{ fila.gramosCarbohidratos }}</td>
           <td>
             <ion-button color="danger" (click)="quitarFila(i)" size="small" fill="outline">
               <ion-icon name="trash-outline"></ion-icon>
@@ -60,18 +26,74 @@
 </ion-card-content>
 
 <ion-card-footer>
-  <ion-button color="primary" (click)="agregarFila()" size="small" fill="outline">
+  <ion-button color="primary" (click)="openModal()" size="small" fill="outline">
     <ion-icon name="add-outline"></ion-icon>
-    Agregar Fila
+    Agregar Alimento
   </ion-button>
 </ion-card-footer>
 
-<div class="ng-autocomplete">
-  <ng-template #itemTemplate let-item>
-    <a [innerHTML]="item.name"></a>
-  </ng-template>
+<ion-modal [isOpen]="isModalOpen" (willDismiss)="closeModal()" cssClass="custom-modal">
+  <ng-template>
 
-  <ng-template #notFoundTemplate let-notFound>
-    <div [innerHTML]="notFound"></div>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Agregar Alimento</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeModal()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <div class="segment-container-div">
+        <ion-item lines="none">
+          <ion-label position="stacked">Alimento:</ion-label>
+          <br>
+          <div [ngClass]="{'segment-container-input': true, 'error': !newFila.name}">
+            <ion-searchbar color="light" [debounce]="1000" animated="true" (ionInput)="handleInput($event)"
+              [(ngModel)]="searchQuery" placeholder="Buscar Alimento" show-cancel-button="never"></ion-searchbar>
+          </div>
+        </ion-item>
+        <br>
+        <ion-list class="autocomplete-container" *ngIf="showResults">
+          <ion-item *ngFor="let result of results" (click)="selectResult(result)">
+            <ion-label>{{ result.name }}</ion-label>
+          </ion-item>
+        </ion-list>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-item lines="none">
+                <ion-label position="stacked">Peso recomendado:</ion-label>
+                <br>
+                <ion-input type="number" [(ngModel)]="newFila.pesoTabla" readonly></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="6">
+              <ion-item lines="none">
+                <ion-label position="stacked">Cho recomendado:</ion-label>
+                <br>
+                <ion-input type="number" [(ngModel)]="newFila.choTabla" readonly></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+      <ion-item lines="none">
+        <ion-label position="stacked">Peso (g):</ion-label>
+        <br>
+        <div [ngClass]="{'segment-container-input': true, 'error': !newFila.pesoGramos}">
+          <ion-input 
+            type="number" 
+            placeholder="000" 
+            (ionInput)="calcularCHO(newFila)"
+            [(ngModel)]="newFila.pesoGramos" 
+            required
+            >
+          </ion-input>
+        </div>
+      </ion-item>
+      <br>
+      <ion-button expand="block" (click)="addFila()">Agregar</ion-button>
+    </ion-content>
   </ng-template>
-</div>
+</ion-modal>
