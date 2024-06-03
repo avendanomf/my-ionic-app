@@ -26,7 +26,7 @@ export class ListaChoComponent implements OnInit {
       console.log(res.response);
       this.dataReporte = res.response;
       this.applyFilters();
-    }, error => {
+    }, (error: any) => { // Especificar el tipo del parámetro error
       console.log(error);
     });
   }
