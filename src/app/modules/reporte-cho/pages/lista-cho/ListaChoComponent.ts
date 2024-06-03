@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { JsonFileService } from 'src/app/services/save-json.service';
 import { DatePipe } from '@angular/common';
+import { PdfGeneratorService } from 'src/app/services/pdf-generator.service'; // Asegúrate de que la ruta es correcta
 
 @Component({
-  selector: 'app-lista-cho',
+  selector: 'app-reporte-cho',
   templateUrl: './lista-cho.component.html',
   styleUrls: ['./lista-cho.component.css'],
   providers: [DatePipe]
@@ -15,7 +16,7 @@ export class ListaChoComponent implements OnInit {
   tipoComida: string = 'Todas';
   alimento: string = 'Todos';
 
-  constructor(private jsonFileService: JsonFileService) {}
+  constructor(private jsonFileService: JsonFileService, private pdfGeneratorService: PdfGeneratorService) {}
 
   ngOnInit() {
     this.obtenerData();
@@ -26,7 +27,7 @@ export class ListaChoComponent implements OnInit {
       console.log(res.response);
       this.dataReporte = res.response;
       this.applyFilters();
-    }, error => {
+    }, (error: any) => {
       console.log(error);
     });
   }
@@ -53,6 +54,6 @@ export class ListaChoComponent implements OnInit {
 
   imprimirReporte() {
     console.log('Imprimir reporte con datos:', this.filteredData);
-    // Aquí puedes agregar la lógica para generar el reporte en el formato que necesites (PDF, Excel, etc.)
+    this.pdfGeneratorService.generatePDF(this.filteredData);
   }
 }
