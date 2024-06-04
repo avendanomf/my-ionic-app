@@ -20,7 +20,7 @@ export class ListaChoComponent implements OnInit {
   ngOnInit() {
     this.obtenerData();
   }
-
+  
   obtenerData() {
     this.jsonFileService.getList().subscribe((res: any) => {
       console.log(res.response);

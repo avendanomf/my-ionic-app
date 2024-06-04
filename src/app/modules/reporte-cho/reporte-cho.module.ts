@@ -18,3 +18,4 @@ import { ListaChoComponent } from './pages/lista-cho/ListaChoComponent';
   providers: []
 })
 export class ReporteCHOModule { }
+
