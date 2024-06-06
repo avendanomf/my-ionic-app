@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReporteCHORoutingModule } from './reporte-chorouting.module';
+import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { ListaChoComponent } from './pages/lista-cho/lista-cho.component';
-
-
+import { ReporteCHORoutingModule } from './reporte-chorouting.module';
+import { ListaChoComponent } from './pages/lista-cho/ListaChoComponent';
 
 @NgModule({
   declarations: [
@@ -12,8 +11,11 @@ import { ListaChoComponent } from './pages/lista-cho/lista-cho.component';
   ],
   imports: [
     CommonModule,
-    ReporteCHORoutingModule,
-    HttpClientModule
-  ]
+    FormsModule,
+    HttpClientModule,
+    ReporteCHORoutingModule
+  ],
+  providers: []
 })
 export class ReporteCHOModule { }
+
