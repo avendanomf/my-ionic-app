@@ -28,7 +28,7 @@ import{AngularFireModule} from '@angular/fire/compat';
   declarations: [AppComponent],
   imports: [   
     BrowserModule, 
-    IonicModule.forRoot(), 
+    IonicModule.forRoot({mode:'md'}), 
     AppRoutingModule,
     FormsModule,
     RouterModule.forRoot([]),
