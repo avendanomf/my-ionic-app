@@ -6,16 +6,22 @@ import { MainPage } from './main.page';
 const routes: Routes = [
   {
     path: '',
-    component: MainPage
+    component: MainPage,
+    children: [
+      {
+        path: 'profile',
+        loadChildren: () => import('./profile/profile.module').then(m => m.ProfilePageModule)
+      },
+      {
+        path: 'report',
+        loadChildren: () => import('../../modules/reporte-cho/reporte-cho.module').then(m => m.ReporteCHOModule)
+      },
+      {
+        path: 'conteo-cho',
+        loadChildren: () => import('../../modules/conteo-cho/conteo-cho.module').then(m => m.ConteoChoModule)
+      }
+    ]
   },
-  {
-    path: 'profile',
-    loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule)
-  },
-  {
-    path: 'conteo-cho',
-    loadChildren: () => import('../../modules/conteo-cho/conteo-cho.module').then( m => m.ConteoChoModule)
-  }
 
 ];
 
@@ -23,4 +29,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class MainPageRoutingModule {}
+export class MainPageRoutingModule { }

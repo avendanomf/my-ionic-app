@@ -5,6 +5,8 @@
   <ion-back-button *ngIf="backButton" [defaultHref]="backButton"></ion-back-button>
 </ion-buttons>
     
+  <ion-menu-button *ngIf="showMenu" slot="start" menu="main-content"></ion-menu-button>
+
     <ion-title>
       <strong>
         {{title}}
