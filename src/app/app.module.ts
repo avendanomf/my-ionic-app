@@ -19,14 +19,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
-
+// import { initializeApp } from "firebase/app";
+import { environment } from 'src/environments/environment';
+import{AngularFireModule} from '@angular/fire/compat';
 
 
 @NgModule({
   declarations: [AppComponent],
   imports: [   
     BrowserModule, 
-    IonicModule.forRoot(), 
+    IonicModule.forRoot({mode:'md'}), 
     AppRoutingModule,
     FormsModule,
     RouterModule.forRoot([]),
@@ -35,7 +37,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     AutocompleteLibModule,
     BrowserAnimationsModule, 
     ToastrModule.forRoot(),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig)
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],

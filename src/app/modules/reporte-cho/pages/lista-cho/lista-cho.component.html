@@ -1,22 +1,39 @@
-<div class="container">
-    <h1>Reporte</h1>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Fecha</th>
-          <th>Suma Insulina Total</th>
-          <th>Promedio Nivel Glucosa</th>
-          <th>Total CHO</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of dataReporte ">
-          <td>{{ item.fecha | date:'dd/MM/yyyy' }}</td>
-          <td>{{ item.sumaInsulinaTotal }}</td>
-          <td>{{ item.promedioNivelGlucosa | number:'1.2-2' }}</td>
-          <td>{{ item.totalCho | number:'1.2-2' }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+<app-header [showMenu]="true" title="Reportes"></app-header>
+<div class="report-container">
+  <h2>Reportes</h2>
   
+  <div class="filter">
+    <label>Tipo de Consulta</label>
+    <select [(ngModel)]="tipoConsulta" (change)="onFilterChange()">
+      <option value="Diario">Diario</option>
+      <option value="Semanal">Semanal</option>
+      <option value="Mensual">Mensual</option>
+      <option value="Todas">Todas</option>
+    </select>
+  </div>
+
+  <div class="filter">
+    <label>Tipo de Comida</label>
+    <select [(ngModel)]="tipoComida" (change)="onFilterChange()">
+      <option value="Desayuno">Desayuno</option>
+      <option value="Almuerzo">Almuerzo</option>
+      <option value="Cena">Cena</option>
+      <option value="Onces">Onces</option>
+      <option value="Todas">Todas</option>
+    </select>
+  </div>
+
+  <div class="filter">
+    <label>Alimento</label>
+    <select [(ngModel)]="alimento" (change)="onFilterChange()">
+      <option value="Arroz">Arroz</option>
+      <option value="Frijol">Frijol</option>
+      <option value="Pasta">Pasta</option>
+      <option value="Aguacate">Aguacate</option>
+      <option value="Huevos">Huevos</option>
+      <option value="Todos">Todos</option>
+    </select>
+  </div>
+
+  <button (click)="imprimirReporte()">Imprimir</button>
+</div>

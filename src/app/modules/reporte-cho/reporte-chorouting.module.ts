@@ -1,22 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ListaChoComponent } from './pages/lista-cho/lista-cho.component';
+import { ListaChoComponent } from './pages/lista-cho/ListaChoComponent';
 
 const routes: Routes = [
   {
     path: '',
-    children: [
-      { path: 'list', component: ListaChoComponent },
-      { path: '**', redirectTo: 'list' }
-    ]
+    component: ListaChoComponent
   }
-]
-
+];
 
 @NgModule({
-  declarations: [],
-  imports: [
-    RouterModule.forChild(routes)
-  ]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
 })
 export class ReporteCHORoutingModule { }
+
+
