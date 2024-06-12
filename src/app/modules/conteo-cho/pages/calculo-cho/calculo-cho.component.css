@@ -109,11 +109,6 @@ ion-segment-button {
   --background: #3880ff;
 }
 
-.radio-label {
-  font-weight: bold;
-  font-size: 14px;
-  color: #333;
-}
 
 .segment-general {
   display: flex;
@@ -126,10 +121,6 @@ ion-segment-button {
   color: #333;
 }
 
-.segment-general {
-  display: flex;
-  flex-direction: column;
-}
 
 .segment-container {
   display: flex;
@@ -145,3 +136,47 @@ ion-segment-button {
   background-color: #ffe6e6;
 }
 
+ion-grid {
+  padding: 0;
+}
+
+ion-item {
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+ion-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+ion-input {
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+
+.segment-container-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+
+}
+
+.segment-container-input.error {
+  border-color: red;
+  background-color: #ffe6e6;
+}
+
+.segment-container-table.error {
+  border-color: red;
+  background-color: #ffe6e6;
+}
+
+.p-btn{
+  padding: 10px;
+}

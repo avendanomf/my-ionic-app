@@ -11,7 +11,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 import { RouteReuseStrategy } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { SharedModule } from 'src/app/modules/shared/shared.module';
+import { MainPageModule } from 'src/app/pages/main/main.module';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     NgbModule,
     HttpClientModule,
     AutocompleteLibModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule,
+    MainPageModule
 
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

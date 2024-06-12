@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ReporteCHORoutingModule } from './reporte-chorouting.module';
 import { ListaChoComponent } from './pages/lista-cho/ListaChoComponent';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,8 @@ import { ListaChoComponent } from './pages/lista-cho/ListaChoComponent';
     CommonModule,
     FormsModule,
     HttpClientModule,
-    ReporteCHORoutingModule
+    ReporteCHORoutingModule,
+    SharedModule
   ],
   providers: []
 })

@@ -1,10 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { NgbCalendar, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ParametersService } from '../../../../services/parameters.service';
 import { Parameter } from 'src/app/interfaces/parameter';
 import { FormRegistro } from 'src/app/interfaces/form-registro';
 import { ToastrService } from 'ngx-toastr';
-import { FormBuilder, FormGroup, NgForm } from '@angular/forms';
 import { JsonFileService } from 'src/app/services/save-json.service';
 import { Insulinas } from 'src/app/interfaces/insulinas';
 import { Glucometrias } from 'src/app/interfaces/glucometrias';
@@ -12,6 +11,9 @@ import { Comida, GlucometriaTBL, InsulinaTBL, SaveRegistroApi } from 'src/app/in
 import { Fila } from 'src/app/interfaces/filas';
 import { ResgitroComidasComponent } from 'src/app/components/resgitro-comidas/resgitro-comidas.component';
 import { RegistroAlimentosComponent } from 'src/app/components/registro-alimentos/registro-alimentos.component';
+import { FirebaseService } from 'src/app/services/firebase.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { User } from 'src/app/interfaces/user';
 
 
 
@@ -22,6 +24,10 @@ import { RegistroAlimentosComponent } from 'src/app/components/registro-alimento
   styleUrls: ['./calculo-cho.component.css']
 })
 export class CalculoChoComponent implements OnInit {
+
+  firebaseSvc = inject(FirebaseService);
+  utilsSvc = inject(UtilsService);
+  user = {} as User;
 
   parameter: Parameter;
 
@@ -37,7 +43,7 @@ export class CalculoChoComponent implements OnInit {
   SaveRegistroApi: SaveRegistroApi;
   @ViewChild(ResgitroComidasComponent) registroAlimentos: RegistroAlimentosComponent | undefined;
 
-  
+
   constructor(
     private calendar: NgbCalendar,
     private parameterService: ParametersService,
@@ -52,6 +58,7 @@ export class CalculoChoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.user = this.utilsSvc.getFromLocalStorage('user');
     this.parameterService.getAllParameters().subscribe(data => {
       if (data.length > 0) {
         const parameter = data[0];
@@ -68,8 +75,8 @@ export class CalculoChoComponent implements OnInit {
     this.registro.totalCHO = filas.reduce((total: number, fila: any) => total + parseFloat(fila.gramosCarbohidratos), 0);
     this.registro.comidas = filas;
     this.calcInsulinaCHO();
-    console.log('desde el hijo: ' + JSON.stringify(this.registro));
-    console.log('padre: ' + JSON.stringify(this.registro));
+    // console.log('desde el hijo: ' + JSON.stringify(this.registro));
+    // console.log('padre: ' + JSON.stringify(this.registro));
   }
   calcInsulinaCHO() {
     //console.log('totalcho: '+ this.totalCHO);
@@ -83,7 +90,7 @@ export class CalculoChoComponent implements OnInit {
   }
 
   insulinaxGluco() {
-    if (this.glucometrias.nivelGlucosa != undefined) {
+    if (this.glucometrias.nivelGlucosa != undefined && this.glucometrias.nivelGlucosa != 0) {
       this.insulinas.insulinaGlucometria = parseFloat(((this.glucometrias.nivelGlucosa - this.parameter.glucoMeta) / this.parameter.Sensibilidad).toFixed(2));
     }
     if (this.insulinas.insulinaCHO != undefined && this.insulinas.insulinaGlucometria != undefined) {
@@ -150,7 +157,7 @@ export class CalculoChoComponent implements OnInit {
   guardarDatos() {
     switch (this.validarCampos()) {
       case 'true':
-        this.saveJSON();
+        this.saveDataBase();
 
         break;
       case 'false':
@@ -164,59 +171,8 @@ export class CalculoChoComponent implements OnInit {
     }
   }
 
-  saveJSON(): boolean {
-
-    const vsaveRegistroApi = new SaveRegistroApi();
-    vsaveRegistroApi.comida = this.registro.comida !== undefined ? this.registro.comida : '';
-    vsaveRegistroApi.fecha = this.formatDate(this.registro.fecha);
-    console.log(this.formatDate(this.registro.fecha));
-    vsaveRegistroApi.totalCho = this.registro.totalCHO !== undefined ? this.registro.totalCHO : 0;
-    vsaveRegistroApi.tblComida = this.registro.comidas.map((fila: Fila) => {
-      const vcomida: Comida = {
-        comidaNombre: fila.name,
-        pesoGramos: parseFloat(fila.pesoGramos),
-        pesoTabla: parseFloat(fila.pesoTabla),
-        choTabla: parseFloat(fila.choTabla),
-        gramosCarbohidratos: parseFloat(fila.gramosCarbohidratos)
-      };
-      return vcomida;
-    });
-
-    const vglucometria = new GlucometriaTBL();
-    vglucometria.horaRegistro = this.glucometrias.horaRegistro !== undefined ? this.glucometrias.horaRegistro : "";
-    vglucometria.nivelGlucosa = this.glucometrias.nivelGlucosa !== undefined ? this.glucometrias.nivelGlucosa : 0;
-
-    vsaveRegistroApi.tblGlucometria = [vglucometria];
-
-
-    const vinsulinaTBL: InsulinaTBL = {
-      insulinaCho: this.insulinas.insulinaCHO,
-      insulinaGlucometria: this.insulinas.insulinaGlucometria,
-      insulinaTotal: this.insulinas.insulinaTotal
-    };
-
-    if (Array.isArray(vsaveRegistroApi.tblInsulinas)) {
-      vsaveRegistroApi.tblInsulinas.push(vinsulinaTBL);
-    } else {
-      vsaveRegistroApi.tblInsulinas = [vinsulinaTBL];
-    }
-    console.log(JSON.stringify(vsaveRegistroApi));
-
-    this.jsonFileService.saveJSONToFile(vsaveRegistroApi).subscribe(res => {
-      console.log(res);
-      this.toastr.success('Campos guardados correctamente', 'success');
-      setTimeout(() => {
-        this.limpiarCampos();
-      }, 1000);
-    },
-      error => {
-        console.log(error)
-        this.toastr.error('Error guardando la informacion: ' + JSON.stringify(error), 'error');
-      });
-    return true;
-  }
-
   limpiarCampos() {
+    debugger;
     this.registro = new FormRegistro(this.calendar);
     this.insulinas = new Insulinas();
     this.glucometrias = new Glucometrias();
@@ -224,4 +180,84 @@ export class CalculoChoComponent implements OnInit {
       this.registroAlimentos.restaurarCampos();
     }
   }
+
+  singOut() {
+    this.firebaseSvc.signOut();
+  }
+
+
+
+  async saveDataBase() {
+    const loading = await this.utilsSvc.loading();
+    await loading.present();
+  
+    let path = `users/${this.user.uid}/registroCho`;
+  
+    const vsaveRegistroApi = new SaveRegistroApi();
+    vsaveRegistroApi.comida = this.registro.comida !== undefined ? this.registro.comida : '';
+    vsaveRegistroApi.fecha = this.formatDate(this.registro.fecha);
+    vsaveRegistroApi.totalCho = this.registro.totalCHO !== undefined ? this.registro.totalCHO : 0;
+  
+    // Convertir las comidas a POJO
+    vsaveRegistroApi.tblComida = this.registro.comidas.map((fila: Fila) => {
+      return {
+        comidaNombre: fila.name,
+        pesoGramos: parseFloat(fila.pesoGramos),
+        pesoTabla: parseFloat(fila.pesoTabla),
+        choTabla: parseFloat(fila.choTabla),
+        gramosCarbohidratos: parseFloat(fila.gramosCarbohidratos)
+      } as Comida;
+    });
+  
+    // Convertir glucometria a POJO
+    const vglucometria = {
+      horaRegistro: this.glucometrias.horaRegistro !== undefined ? this.glucometrias.horaRegistro : "",
+      nivelGlucosa: this.glucometrias.nivelGlucosa !== undefined ? this.glucometrias.nivelGlucosa : 0
+    } as GlucometriaTBL;
+  
+    vsaveRegistroApi.tblGlucometria = [vglucometria];
+  
+    // Convertir insulina a POJO
+    const vinsulinaTBL = {
+      insulinaCho: this.insulinas.insulinaCHO,
+      insulinaGlucometria: this.insulinas.insulinaGlucometria,
+      insulinaTotal: this.insulinas.insulinaTotal
+    } as InsulinaTBL;
+  
+    vsaveRegistroApi.tblInsulinas = [vinsulinaTBL];
+  
+    // Crear un objeto simple para guardar en Firebase
+    const dataToSave = {
+      comida: vsaveRegistroApi.comida,
+      fecha: vsaveRegistroApi.fecha,
+      totalCho: vsaveRegistroApi.totalCho,
+      tblComida: vsaveRegistroApi.tblComida,
+      tblGlucometria: vsaveRegistroApi.tblGlucometria,
+      tblInsulinas: vsaveRegistroApi.tblInsulinas
+    };
+  
+    console.log(JSON.stringify(dataToSave));
+  
+    this.firebaseSvc.addDocument(path, dataToSave).then(async res => {
+      await loading.dismiss();
+      this.utilsSvc.presentToast({
+        message: 'Se guardo con Exito',
+        duration: 2500,
+        color: 'primary',
+        position: 'top',
+        icon: 'alert-circle-outline'
+      });
+    }).catch(async err => {
+      await loading.dismiss();
+      this.utilsSvc.presentToast({
+        message: err.message,
+        duration: 2500,
+        color: 'primary',
+        position: 'top',
+        icon: 'alert-circle-outline'
+      });
+    });
+  }
+  
+
 }
