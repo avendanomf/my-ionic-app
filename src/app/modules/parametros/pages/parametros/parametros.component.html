@@ -1,0 +1,40 @@
+<app-header [showMenu]="true" title="Parámetros"></app-header>
+
+
+<ion-content>
+  <ion-card class="scroll-x-container">
+    <ion-card-content>
+      <form (ngSubmit)="onSubmit()">
+        <ion-item>
+          <ion-label position="floating">Estatura (cm)</ion-label>
+          <ion-input type="number" [(ngModel)]="estatura" name="estatura"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Peso (kg)</ion-label>
+          <ion-input type="number" [(ngModel)]="peso" name="peso"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Ratio</ion-label>
+          <ion-input type="number" [(ngModel)]="ratio" name="ratio"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Sensibilidad</ion-label>
+          <ion-input type="number" [(ngModel)]="sensibilidad" name="sensibilidad"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Glucometría Min</ion-label>
+          <ion-input type="number" [(ngModel)]="glucometriaMin" name="glucometriaMin"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Glucometría Max</ion-label>
+          <ion-input type="number" [(ngModel)]="glucometriaMax" name="glucometriaMax"></ion-input>
+        </ion-item>
+        <ion-row>
+          <ion-col class="p-btn">
+            <ion-button expand="full" color="primary" type="submit">Aceptar</ion-button>
+          </ion-col>
+        </ion-row>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

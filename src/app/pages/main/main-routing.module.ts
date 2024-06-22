@@ -19,10 +19,14 @@ const routes: Routes = [
       {
         path: 'conteo-cho',
         loadChildren: () => import('../../modules/conteo-cho/conteo-cho.module').then(m => m.ConteoChoModule)
+      },
+      {
+        path: 'parametros',
+        loadChildren: () => import('../../modules/parametros/parametros.module').then(m => m.ParametrosModule)
+        
       }
     ]
-  },
-
+  }
 ];
 
 @NgModule({

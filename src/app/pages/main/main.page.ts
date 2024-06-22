@@ -16,7 +16,9 @@ export class MainPage implements OnInit {
 
   public appPages = [
     { title: 'Home', url: '/main/conteo-cho', icon: 'home' },
-    { title: 'Reportes', url: '/main/report', icon: 'document' }
+    { title: 'Reportes', url: '/main/report', icon: 'document' },
+    { title: 'Conteo CHO', url: '/main/conteo-cho', icon: 'nutrition' },
+    { title: 'Parámetros', url: '/main/parametros', icon: 'settings' }
   ];
   constructor() { }
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { JsonFileService } from 'src/app/services/save-json.service';
 import { DatePipe } from '@angular/common';
-import { PdfGeneratorService } from 'src/app/services/pdf-generator.service'; // Asegúrate de que la ruta es correcta
+import { PdfGeneratorService } from 'src/app/services/pdf-generator.service';
 
 @Component({
   selector: 'app-reporte-cho',
@@ -15,6 +15,8 @@ export class ListaChoComponent implements OnInit {
   tipoConsulta: string = 'Todas';
   tipoComida: string = 'Todas';
   alimento: string = 'Todos';
+  fechaDesde: string;
+  fechaHasta: string;
 
   constructor(private jsonFileService: JsonFileService, private pdfGeneratorService: PdfGeneratorService) {}
 
@@ -45,6 +47,14 @@ export class ListaChoComponent implements OnInit {
 
     if (this.alimento !== 'Todos') {
       this.filteredData = this.filteredData.filter(item => item.alimento === this.alimento);
+    }
+
+    if (this.fechaDesde) {
+      this.filteredData = this.filteredData.filter(item => new Date(item.fecha) >= new Date(this.fechaDesde));
+    }
+
+    if (this.fechaHasta) {
+      this.filteredData = this.filteredData.filter(item => new Date(item.fecha) <= new Date(this.fechaHasta));
     }
   }
 
