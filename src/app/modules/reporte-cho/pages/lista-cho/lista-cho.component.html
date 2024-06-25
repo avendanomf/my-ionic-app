@@ -1,39 +1,70 @@
 <app-header [showMenu]="true" title="Reportes"></app-header>
-<div class="report-container">
-  <h2>Reportes</h2>
-  
-  <div class="filter">
-    <label>Tipo de Consulta</label>
-    <select [(ngModel)]="tipoConsulta" (change)="onFilterChange()">
-      <option value="Diario">Diario</option>
-      <option value="Semanal">Semanal</option>
-      <option value="Mensual">Mensual</option>
-      <option value="Todas">Todas</option>
-    </select>
-  </div>
+<ion-content>
+  <!-- Filtros de Fecha -->
+  <ion-card class="filtro-card">
+    <ion-card-header>
+      <ion-card-title>Filtrar</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="filtro-row">
+        <div class="filtro-label">
+          <ion-label class="radio-label">Inicio:</ion-label>
+          <ion-datetime-button fill="outline" datetime="fechaInicio"></ion-datetime-button>
+        </div>
+        <div class="filtro-label">
+          <ion-label class="radio-label">Fin:</ion-label>
+          <ion-datetime-button fill="outline" datetime="fechaFin"></ion-datetime-button>
+        </div>
+      </div>
+      <div class="filtro-row">
+        <ion-button class="aplicar-button" (click)="aplicarFiltro()">Aplicar</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
 
-  <div class="filter">
-    <label>Tipo de Comida</label>
-    <select [(ngModel)]="tipoComida" (change)="onFilterChange()">
-      <option value="Desayuno">Desayuno</option>
-      <option value="Almuerzo">Almuerzo</option>
-      <option value="Cena">Cena</option>
-      <option value="Onces">Onces</option>
-      <option value="Todas">Todas</option>
-    </select>
-  </div>
 
-  <div class="filter">
-    <label>Alimento</label>
-    <select [(ngModel)]="alimento" (change)="onFilterChange()">
-      <option value="Arroz">Arroz</option>
-      <option value="Frijol">Frijol</option>
-      <option value="Pasta">Pasta</option>
-      <option value="Aguacate">Aguacate</option>
-      <option value="Huevos">Huevos</option>
-      <option value="Todos">Todos</option>
-    </select>
-  </div>
+  <!-- Sección de Reportes -->
+  <ion-card class="reporte-card">
+    <ion-card-header>
+      <ion-card-title>Reportes</ion-card-title>
+    </ion-card-header>
+    <ion-card-body>
+      <div *ngFor="let fechaAgrupada of filteredGroupedReportes | keyvalue" class="reporte-fecha">
+        <h2 class="fecha-titulo">{{ formatDate(parseDate(fechaAgrupada.key)) }}</h2>
+        <ion-list>
+          <ion-list-item *ngFor="let registro of fechaAgrupada.value">
+            <ion-grid>
+              <ion-row class="reporte-row">
+                <ion-col size="6" class="reporte-col">
+                  <span class="comida">{{ registro.comida }}</span>
+                </ion-col>
+                <ion-col size="6" class="reporte-col">
+                  <span class="cho-total">CHO Total: {{ registro.totalCho }}</span>
+                </ion-col>
+              </ion-row>
+              <ion-row class="reporte-row">
+                <ion-col size="6" class="reporte-col">
+                  <span class="glucometria">Glucometria: {{ registro.tblGlucometria[0].nivelGlucosa }}</span>
+                </ion-col>
+                <ion-col size="6" class="reporte-col">
+                  <span class="insulina">Insulina: {{ registro.tblInsulinas[0].insulinaTotal }}</span>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-list-item>
+        </ion-list>
+      </div>
+    </ion-card-body>
+  </ion-card>
 
-  <button (click)="imprimirReporte()">Imprimir</button>
-</div>
+  <!-- Modal para seleccionar fechas -->
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="fechaInicio" [value]="fechaInicio.toISOString()" (ionChange)="onFechaInicioChange($event)"
+        presentation="date"></ion-datetime>
+      <ion-datetime id="fechaFin" [value]="fechaFin.toISOString()" (ionChange)="onFechaFinChange($event)"
+        presentation="date"></ion-datetime>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

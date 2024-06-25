@@ -1,44 +1,152 @@
-.report-container {
-    padding: 20px;
-    max-width: 400px;
-    margin: auto;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-  }
-  
-  h2 {
-    text-align: center;
-  }
-  
-  .filter {
-    margin-bottom: 20px;
-  }
-  
-  .filter label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  .filter select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
+/* Estilos generales */
+.reporte-card {
+  margin: 20px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
 
-  button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
+.reporte-fecha {
+  margin-bottom: 20px;
+}
+
+.fecha-titulo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 5px;
+}
+
+.reporte-item {
+  background-color: #f9f9f9;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.reporte-row {
+  margin-bottom: 10px;
+}
+
+.reporte-col {
+  display: flex;
+  align-items: center;
+}
+
+.comida {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.cho-total,
+.glucometria,
+.insulina {
+  font-size: 1rem;
+}
+
+.cho-total {
+  color: #FF5733;
+}
+
+.glucometria {
+  color: #33A1FF;
+}
+
+.insulina {
+  color: #33FF57;
+}
+
+
+/* Estilos generales */
+.reporte-card {
+  margin: 20px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.reporte-fecha {
+  margin-bottom: 20px;
+}
+
+.fecha-titulo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 5px;
+}
+
+.reporte-item {
+  background-color: #f9f9f9;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.reporte-row {
+  margin-bottom: 10px;
+}
+
+.reporte-col {
+  display: flex;
+  align-items: center;
+}
+
+.comida {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.cho-total,
+.glucometria,
+.insulina {
+  font-size: 1rem;
+}
+
+.cho-total {
+  color: #FF5733;
+}
+
+.glucometria {
+  color: #33A1FF;
+}
+
+.insulina {
+  color: #33FF57;
+}
+
+
+.filtro-card {
+  margin: 20px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.filtro-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.filtro-label {
+  display: flex;
+  align-items: center;
+}
+
+.aplicar-label {
+  margin-right: 10px;
+}
+
+.aplicar-button {
+  flex-grow: 1; /* Hace que el botón ocupe todo el espacio disponible horizontalmente */
+  margin: 0 auto; /* Centra el botón horizontalmente dentro del contenedor */
+  max-width: 200px; /* Establece un ancho máximo para el botón */
+}
