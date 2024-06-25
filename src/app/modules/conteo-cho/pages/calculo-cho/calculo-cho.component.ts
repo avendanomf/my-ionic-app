@@ -41,7 +41,7 @@ export class CalculoChoComponent implements OnInit {
   insulinas: Insulinas;
   glucometrias: Glucometrias;
   SaveRegistroApi: SaveRegistroApi;
-  @ViewChild(ResgitroComidasComponent) registroAlimentos: RegistroAlimentosComponent | undefined;
+  @ViewChild(RegistroAlimentosComponent) registroAlimentos: RegistroAlimentosComponent | undefined;
 
 
   constructor(
@@ -72,7 +72,7 @@ export class CalculoChoComponent implements OnInit {
     });
   }
   actualizarTotalCHO(filas: any) {
-    this.registro.totalCHO = filas.reduce((total: number, fila: any) => total + parseFloat(fila.gramosCarbohidratos), 0);
+    this.registro.totalCho = filas.reduce((total: number, fila: any) => total + parseFloat(fila.gramosCarbohidratos), 0);
     this.registro.comidas = filas;
     this.calcInsulinaCHO();
     // console.log('desde el hijo: ' + JSON.stringify(this.registro));
@@ -80,8 +80,8 @@ export class CalculoChoComponent implements OnInit {
   }
   calcInsulinaCHO() {
     //console.log('totalcho: '+ this.totalCHO);
-    if (this.registro.totalCHO !== undefined && this.parameter.Ratio !== undefined) {
-      this.insulinas.insulinaCHO = parseFloat((this.registro.totalCHO / this.parameter.Ratio).toFixed(2));
+    if (this.registro.totalCho !== undefined && this.parameter.Ratio !== undefined) {
+      this.insulinas.insulinaCHO = parseFloat((this.registro.totalCho / this.parameter.Ratio).toFixed(2));
     } else {
       this.insulinas.insulinaCHO = 0;
     }
@@ -172,7 +172,6 @@ export class CalculoChoComponent implements OnInit {
   }
 
   limpiarCampos() {
-    debugger;
     this.registro = new FormRegistro(this.calendar);
     this.insulinas = new Insulinas();
     this.glucometrias = new Glucometrias();
@@ -196,7 +195,7 @@ export class CalculoChoComponent implements OnInit {
     const vsaveRegistroApi = new SaveRegistroApi();
     vsaveRegistroApi.comida = this.registro.comida !== undefined ? this.registro.comida : '';
     vsaveRegistroApi.fecha = this.formatDate(this.registro.fecha);
-    vsaveRegistroApi.totalCho = this.registro.totalCHO !== undefined ? this.registro.totalCHO : 0;
+    vsaveRegistroApi.totalCho = this.registro.totalCho !== undefined ? this.registro.totalCho : 0;
   
     // Convertir las comidas a POJO
     vsaveRegistroApi.tblComida = this.registro.comidas.map((fila: Fila) => {
@@ -212,7 +211,7 @@ export class CalculoChoComponent implements OnInit {
     // Convertir glucometria a POJO
     const vglucometria = {
       horaRegistro: this.glucometrias.horaRegistro !== undefined ? this.glucometrias.horaRegistro : "",
-      nivelGlucosa: this.glucometrias.nivelGlucosa !== undefined ? this.glucometrias.nivelGlucosa : 0
+      nivelGlucosa: this.glucometrias.nivelGlucosa !== undefined ? this.glucometrias.nivelGlucosa : ""
     } as GlucometriaTBL;
   
     vsaveRegistroApi.tblGlucometria = [vglucometria];
@@ -236,26 +235,27 @@ export class CalculoChoComponent implements OnInit {
       tblInsulinas: vsaveRegistroApi.tblInsulinas
     };
   
-    console.log(JSON.stringify(dataToSave));
   
     this.firebaseSvc.addDocument(path, dataToSave).then(async res => {
-      await loading.dismiss();
       this.utilsSvc.presentToast({
         message: 'Se guardo con Exito',
-        duration: 2500,
-        color: 'primary',
-        position: 'top',
-        icon: 'alert-circle-outline'
+        duration: 1500,
+        color: 'success',
+        position: 'middle',
+        icon: 'checkmark-circle-outline'
       });
     }).catch(async err => {
-      await loading.dismiss();
       this.utilsSvc.presentToast({
         message: err.message,
         duration: 2500,
         color: 'primary',
         position: 'top',
         icon: 'alert-circle-outline'
-      });
+      }).finally(() => {
+        this.limpiarCampos();
+        loading.dismiss();
+      })
+      
     });
   }
   

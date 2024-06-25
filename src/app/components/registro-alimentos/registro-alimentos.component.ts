@@ -8,9 +8,7 @@ import { AlimentosService } from 'src/app/services/alimentos.service';
   styleUrls: ['./registro-alimentos.component.scss'],
 })
 export class RegistroAlimentosComponent implements OnInit {
-  filas: any[] = [
-    // { name: '', pesoGramos: '', pesoTabla: '', choTabla: '', gramosCarbohidratos: '' }
-  ];
+  filas: any[] = [];
   newFila: any = { name: '', pesoGramos: '', pesoTabla: '', choTabla: '', gramosCarbohidratos: '' };
   alimentos: Alimento[] = [];
   keyword = 'name';
@@ -91,7 +89,6 @@ export class RegistroAlimentosComponent implements OnInit {
   }
 
   restaurarCampos() {
-    console.log("entro desde padre");
     this.filas = [];
     this.alimentos = [];
   }
