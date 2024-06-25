@@ -101,6 +101,13 @@
 
 <ion-modal [keepContentsMounted]="true">
     <ng-template>
-        <ion-datetime id="datetime" [value]="fechaRegistro.toISOString()" (ionChange)="($event)"></ion-datetime>
+        <ion-datetime id="datetime" [value]="fechaRegistro.toISOString()" (ionChange)="($event)" presentation="date"
+        [formatOptions]="{
+          date: {
+            weekday: 'long',
+            month: 'long',
+            day: '2-digit',
+          }
+        }"></ion-datetime>
     </ng-template>
 </ion-modal>

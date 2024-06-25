@@ -9,7 +9,6 @@ import { Insulinas } from 'src/app/interfaces/insulinas';
 import { Glucometrias } from 'src/app/interfaces/glucometrias';
 import { Comida, GlucometriaTBL, InsulinaTBL, SaveRegistroApi } from 'src/app/interfaces/save-registro-api';
 import { Fila } from 'src/app/interfaces/filas';
-import { ResgitroComidasComponent } from 'src/app/components/resgitro-comidas/resgitro-comidas.component';
 import { RegistroAlimentosComponent } from 'src/app/components/registro-alimentos/registro-alimentos.component';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
