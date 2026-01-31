@@ -344,6 +344,14 @@
     "calorias": 184
   },
   {
+    "name": "Tomate cherry",
+    "tamanio": "10 unidades medianas",
+    "peso": 150,
+    "gramos": 5,
+    "categoria": "VERDURAS",
+    "calorias": 27
+  },
+  {
     "name": "Verdura cocida",
     "tamanio": "1 taza",
     "peso": 180,

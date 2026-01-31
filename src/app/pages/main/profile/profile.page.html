@@ -7,12 +7,12 @@
   </ion-avatar>
 
   <ion-button class="photo-btn" (click)="takeImage()" mode="ios" size="small" shape="round">
-    <ion-icon  name="camera-outline"></ion-icon>
+    <ion-icon name="camera-outline"></ion-icon>
   </ion-button>
 
   <h2>{{user()?.name}}</h2>
   <div>Paciente</div>
-  <ion-item>
+  <ion-item (click)="editProfile()" class="ion-margin-top-12" button detail="false" lines="none">
     <ion-icon color="primary" slot="start" name="person-outline"></ion-icon>
     <ion-label>Editar Perfil</ion-label>
   </ion-item>

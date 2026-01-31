@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { User } from 'src/app/interfaces/user';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { UpdateUserComponent } from 'src/app/components/shared/update-user/update-user.component';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
@@ -33,7 +34,7 @@ export class ProfilePage implements OnInit {
 
 
     this.firebaseSvc.updateDocument(path, { image: user.image }).then(async res => {
-      this.utilsSvc.saveInLovalStorage('user', user);
+      this.utilsSvc.saveInLocalStorage('user', user);
 
       this.utilsSvc.presentToast({
         message: 'Imagen actualizada exitosamente',
@@ -55,6 +56,14 @@ export class ProfilePage implements OnInit {
       })
     }).finally(() => {
       loading.dismiss();
+    })
+  }
+
+  async editProfile() {
+    let success = await this.utilsSvc.presentModal({
+      component: UpdateUserComponent,
+      componentProps: { user: this.user() },
+      cssClass: 'add-update-modal'
     })
   }
 

@@ -60,7 +60,7 @@ export class SignUpPage implements OnInit {
       delete this.form.value.password;
 
       this.firebaseSvc.setDocument(path, this.form.value).then(async res => {
-        this.utilsSvc.saveInLovalStorage('user', this.form.value);
+        this.utilsSvc.saveInLocalStorage('user', this.form.value);
         this.utilsSvc.RouterLink('/main/conteo-cho');
         this.form.reset();
       }).catch(err => {

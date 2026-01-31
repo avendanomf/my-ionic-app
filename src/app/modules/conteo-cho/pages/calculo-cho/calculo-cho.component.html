@@ -16,17 +16,16 @@
                     <ion-label class="radio-label">Comida:</ion-label>
                     <br>
                     <div [ngClass]="{'segment-container': true, 'error': !registro.comida}">
-                        <ion-segment [(ngModel)]="registro.comida" required>
-                            <ion-segment-button value="Desayuno">
-                                <ion-label>Desayuno</ion-label>
-                            </ion-segment-button>
-                            <ion-segment-button value="Almuerzo">
-                                <ion-label>Almuerzo</ion-label>
-                            </ion-segment-button>
-                            <ion-segment-button value="Comida">
-                                <ion-label>Comida</ion-label>
-                            </ion-segment-button>
-                        </ion-segment>
+                        <ion-select
+                            [(ngModel)]="registro.comida"
+                            placeholder="Seleccione"
+                            interface="popover"
+                            required>
+                            <ion-select-option value="Desayuno">Desayuno</ion-select-option>
+                            <ion-select-option value="Almuerzo">Almuerzo</ion-select-option>
+                            <ion-select-option value="Comida">Cena</ion-select-option>
+                            <ion-select-option value="Merienda">Merienda</ion-select-option>
+                        </ion-select>
                     </div>
                 </div>
             </ion-item>

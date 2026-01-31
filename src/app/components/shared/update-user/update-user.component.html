@@ -1,0 +1,45 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>Actualizar Perfil</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="utilsSvc.dismissModal()">
+                <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <form [formGroup]="form" (ngSubmit)="submit()" (keypress.enter)="submit()">
+
+        <app-logo></app-logo>
+
+        <app-custom-input [control]="form.controls.name" type="text" label="Nombre"
+            icon="person-outline"></app-custom-input>
+
+        <div class="validators" *ngIf="form.controls.name.errors && form.controls.name.touched">
+            <div *ngIf="form.controls.name.errors?.['required']">El nombre es requerido</div>
+            <div *ngIf="form.controls.name.errors?.['minlength']">El nombre debe tener al menos 4 caracteres</div>
+        </div>
+
+        <app-custom-input [control]="form.controls.ratio" type="number" label="Ratio"
+            icon="stats-chart-outline"></app-custom-input>
+
+        <div class="validators" *ngIf="form.controls.ratio.errors && form.controls.ratio.touched">
+            <div *ngIf="form.controls.ratio.errors?.['required']">El ratio es requerido</div>
+        </div>
+
+        <app-custom-input [control]="form.controls.sensibilidad" type="number" label="Sensibilidad"
+            icon="fitness-outline"></app-custom-input>
+
+        <div class="validators" *ngIf="form.controls.sensibilidad.errors && form.controls.sensibilidad.touched">
+            <div *ngIf="form.controls.sensibilidad.errors?.['required']">La sensibilidad es requerida</div>
+        </div>
+
+        <ion-button class="ion-margin-top" expand="block" mode="ios" [disabled]="form.invalid" type="submit">
+            Actualizar
+            <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+        </ion-button>
+
+    </form>
+</ion-content>

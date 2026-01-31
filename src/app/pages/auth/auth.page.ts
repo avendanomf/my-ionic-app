@@ -29,16 +29,16 @@ export class AuthPage implements OnInit {
       await loading.present();
       this.firebaseSvc.SingIn(this.form.value as User).then(res => {
         this.getUserInfo(res.user.uid);
-      }).catch(err =>{
+      }).catch(err => {
         this.utilsSvc.presentToast({
           message: err.message,
-          duration:2500,
-          color:'primary',
-          position:'middle',
-          icon:'alert-circle-outline'
+          duration: 2500,
+          color: 'primary',
+          position: 'middle',
+          icon: 'alert-circle-outline'
         })
-        
-      }).finally(()=>{
+
+      }).finally(() => {
         loading.dismiss();
       })
     }
@@ -51,8 +51,8 @@ export class AuthPage implements OnInit {
 
       let path = `users/${uid}`;
 
-      this.firebaseSvc.getDocument(path).then((user : User)  => {
-        this.utilsSvc.saveInLovalStorage('user', user);
+      this.firebaseSvc.getDocument(path).then((user: User) => {
+        this.utilsSvc.saveInLocalStorage('user', user);
         this.utilsSvc.RouterLink('/main/conteo-cho');
         this.form.reset();
 

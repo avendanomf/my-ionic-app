@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SplashScreen } from '@capacitor/splash-screen';
 
 @Component({
   selector: 'app-root',
@@ -6,7 +7,14 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
- 
 
-  constructor() {}
+  constructor() {
+    this.initApp();
+  }
+
+  initApp() {
+    SplashScreen.hide().catch(err => {
+      console.warn('Error hiding splash screen:', err);
+    });
+  }
 }
