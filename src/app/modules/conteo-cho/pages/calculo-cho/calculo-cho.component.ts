@@ -59,7 +59,6 @@ export class CalculoChoComponent implements OnInit {
     this.parameterService.getAllParameters().subscribe(data => {
       if (data.length > 0) {
         const parameter = data[0];
-        debugger
         this.parameter.Ratio = this.user.ratio;
         this.parameter.Sensibilidad = this.user.sensibilidad;
         this.parameter.gluMax = parameter.gluMax;

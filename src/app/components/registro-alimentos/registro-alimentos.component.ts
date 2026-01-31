@@ -1,6 +1,8 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild, Renderer2 } from '@angular/core';
 import { Alimento } from 'src/app/interfaces/alimentos';
 import { AlimentosService } from 'src/app/services/alimentos.service';
+import { GeminiService } from 'src/app/services/gemini.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-registro-alimentos',
@@ -20,6 +22,10 @@ export class RegistroAlimentosComponent implements OnInit {
   showResults: boolean = false;
   searchQuery: string = '';
   selectedOption: string = 'buscar'; // Inicializar opción seleccionada
+  imageAI: string = '';
+  aiResults: any[] = [];
+  loadingAI: boolean = false;
+
   @Output() totalCHOEvent = new EventEmitter<any[]>();
   @Output() totalCaloriasEvent = new EventEmitter<number>();
 
@@ -30,7 +36,12 @@ export class RegistroAlimentosComponent implements OnInit {
 
   public results: Alimento[] = [];
 
-  constructor(private alimentosService: AlimentosService, private renderer: Renderer2) {
+  constructor(
+    private alimentosService: AlimentosService,
+    private renderer: Renderer2,
+    private geminiSvc: GeminiService,
+    private utilsSvc: UtilsService
+  ) {
     this.cargarListcomidas();
   }
 
@@ -131,5 +142,91 @@ export class RegistroAlimentosComponent implements OnInit {
       normalize(d.name).includes(query)
     );
     this.showResults = this.results.length > 0;
+  }
+
+  async takeImageAI() {
+    try {
+      this.isModalOpen = false;
+      const photo = await this.utilsSvc.takePicture('Imagen de Alimento', false);
+      this.isModalOpen = true;
+
+      if (photo && photo.dataUrl) {
+        this.imageAI = photo.dataUrl;
+        this.analyzeWithAI();
+      }
+    } catch (error) {
+      this.isModalOpen = true;
+      console.log('Cámara cancelada o error:', error);
+    }
+  }
+
+  async analyzeWithAI() {
+    this.loadingAI = true;
+    this.aiResults = [];
+
+    try {
+      const foodNames = this.alimentos.map(a => a.name);
+      const results = await this.geminiSvc.analyzeFoodImage(this.imageAI, foodNames);
+
+      this.aiResults = results.map((res: any) => {
+        const alimentoFull = this.alimentos.find(a => a.name === res.name);
+
+        if (alimentoFull) {
+          return {
+            ...alimentoFull,
+            pesoGramos: res.pesoGramos,
+            seleccionado: true,
+            isNew: false
+          };
+        } else {
+          // El alimento no está en la base de datos local
+          return {
+            name: res.name,
+            pesoGramos: res.pesoGramos,
+            gramos: res.cho || 0, // CHO estimado por la IA
+            calorias: res.calorias || 0, // Calorías estimadas por la IA
+            peso: res.pesoGramos, // Lo usamos como base para escala si editan el peso
+            tamanio: 'Detectado por IA',
+            seleccionado: true,
+            isNew: true
+          };
+        }
+      });
+
+    } catch (error) {
+      console.error(error);
+      this.utilsSvc.presentToast({
+        message: 'Error analizando la imagen',
+        duration: 2500,
+        color: 'danger',
+        position: 'middle'
+      });
+    } finally {
+      this.loadingAI = false;
+    }
+  }
+
+  addAIItems() {
+    const itemsToAdd = this.aiResults.filter(r => r.seleccionado);
+
+    for (let item of itemsToAdd) {
+      let fila = {
+        name: item.name,
+        pesoGramos: item.pesoGramos,
+        pesoTabla: item.peso,
+        choTabla: item.gramos,
+        caloriasTabla: item.calorias,
+        gramosCarbohidratos: 0,
+        caloriasPorcion: 0
+      };
+
+      this.calcularCHO(fila);
+      this.filas.push(fila);
+    }
+
+    this.calcularTotalCHO();
+    this.closeModal();
+    this.imageAI = '';
+    this.aiResults = [];
   }
 }

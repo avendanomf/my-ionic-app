@@ -48,15 +48,15 @@ export class UtilsService {
 
 
 
-  async takePicture(promptLabelHeader: string) {
+  async takePicture(promptLabelHeader: string, allowEditing: boolean = true) {
     return await Camera.getPhoto({
       quality: 90,
-      allowEditing: true,
+      allowEditing: allowEditing,
       resultType: CameraResultType.DataUrl,
       source: CameraSource.Prompt,
       promptLabelHeader,
       promptLabelPhoto: 'Selecciona una Imagen',
       promptLabelPicture: 'Toma una foto'
     });
-  };
+  }
 }

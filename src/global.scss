@@ -30,7 +30,7 @@ ion-button {
 }
 
 // safe padding for ios
-.safe-p-bottom{
+.safe-p-bottom {
     padding-bottom: constant(safe-area-inset-bottom); // for ios 13+
     padding-bottom: env(safe-area-inset-bottom); // for previous ios versions
 }
@@ -128,4 +128,10 @@ ion-button {
     .add-update-modal {
         --height: 680px;
     }
+}
+
+// Fix para que los elementos de PWA (cámara/galería) se vean por encima del modal
+pwa-action-sheet,
+pwa-camera-modal-manager {
+    z-index: 30000 !important;
 }

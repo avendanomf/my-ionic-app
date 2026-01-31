@@ -19,17 +19,31 @@ export class noAuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    let user = localStorage.getItem('user');
     return new Promise((resolve) => {
-      this.firebaseSvc.getAuth().onAuthStateChanged((auth) => {
+      // Usar currentUser inmediatamente si ya está disponible para mayor velocidad
+      const user = this.firebaseSvc.getAuth().currentUser;
+      if (user) {
+        this.utilsSvc.RouterLink('/main/conteo-cho');
+        resolve(false);
+        return;
+      }
+
+      // Si no, esperar al cambio de estado con un timeout de seguridad
+      const unsubscribe = this.firebaseSvc.getAuth().onAuthStateChanged((auth) => {
+        unsubscribe();
         if (!auth) {
           resolve(true);
-        }
-        else {
+        } else {
           this.utilsSvc.RouterLink('/main/conteo-cho');
           resolve(false);
         }
       });
+
+      // Timeout de 3 segundos para no bloquear la app si hay mala conexión
+      setTimeout(() => {
+        unsubscribe();
+        resolve(true); // Dejar pasar al login por defecto si falla la verificación
+      }, 3000);
     });
   }
 

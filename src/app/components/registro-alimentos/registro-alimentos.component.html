@@ -52,6 +52,10 @@
         <ion-segment-button value="manual">
           <ion-label>Otro</ion-label>
         </ion-segment-button>
+        <ion-segment-button value="ia">
+          <ion-icon name="sparkles-outline"></ion-icon>
+          <ion-label>Análisis IA</ion-label>
+        </ion-segment-button>
       </ion-segment>
 
       <!-- Contenido para la opción de búsqueda de alimentos -->
@@ -94,12 +98,8 @@
           <ion-label position="stacked">Peso (g):</ion-label>
           <br>
           <div [ngClass]="{'segment-container-input': true, 'error': !newFila.pesoGramos}">
-            <ion-input 
-              type="number" 
-              placeholder="000" 
-              (ionInput)="calcularCHO(newFila)"
-              [(ngModel)]="newFila.pesoGramos" 
-              required>
+            <ion-input type="number" placeholder="000" (ionInput)="calcularCHO(newFila)"
+              [(ngModel)]="newFila.pesoGramos" required>
             </ion-input>
           </div>
         </ion-item>
@@ -128,8 +128,75 @@
         </ion-item>
       </div>
 
-      <br>
-      <ion-button expand="block" (click)="addFila()">Agregar</ion-button>
+      <!-- Contenido para Análisis IA -->
+      <div *ngIf="selectedOption === 'ia'" class="ion-text-center">
+
+        <div *ngIf="!imageAI" class="ai-empty-state ion-padding">
+          <ion-icon name="camera-outline" style="font-size: 64px; color: var(--ion-color-step-300);"></ion-icon>
+          <p>Toma una foto de tu comida para analizarla con IA</p>
+          <ion-button (click)="takeImageAI()" expand="block" shape="round">
+            Tomar Foto
+          </ion-button>
+        </div>
+
+        <div *ngIf="imageAI">
+          <div class="image-preview-container">
+            <img [src]="imageAI" class="ai-preview-img" />
+            <ion-button (click)="takeImageAI()" class="retake-btn" size="small" color="light" shape="round">
+              Cambiar Foto
+            </ion-button>
+          </div>
+
+          <div *ngIf="loadingAI" class="ion-padding">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Analizando alimentos...</p>
+          </div>
+
+          <div *ngIf="!loadingAI && aiResults.length > 0">
+            <ion-list-header>
+              <ion-label>Alimentos Detectados</ion-label>
+            </ion-list-header>
+            <ion-list class="ai-results-container">
+              <ion-item *ngFor="let res of aiResults" lines="full">
+                <ion-checkbox slot="start" [(ngModel)]="res.seleccionado" class="ion-no-margin"></ion-checkbox>
+
+                <ion-label class="ion-text-wrap ai-item-label">
+                  <h3 class="food-name">
+                    {{res.name}}
+                    <ion-badge color="success" *ngIf="res.isNew">IA</ion-badge>
+                  </h3>
+                  <p class="reference-text">{{res.tamanio}} (Referencia)</p>
+                </ion-label>
+
+                <div slot="end" class="ai-weight-control">
+                  <ion-input type="number" [(ngModel)]="res.pesoGramos" class="weight-input"></ion-input>
+                  <span class="unit">g</span>
+                </div>
+              </ion-item>
+            </ion-list>
+          </div>
+
+          <div *ngIf="!loadingAI && aiResults.length === 0" class="ion-padding">
+            <p>No se detectaron alimentos conocidos. Intenta con otra foto.</p>
+          </div>
+        </div>
+
+      </div>
     </ion-content>
+
+    <ion-footer *ngIf="isModalOpen">
+      <ion-toolbar>
+        <div class="footer-buttons" *ngIf="selectedOption === 'ia' && imageAI && !loadingAI && aiResults.length > 0">
+          <ion-button expand="block" (click)="addAIItems()" class="ion-margin">
+            Añadir Seleccionados
+          </ion-button>
+        </div>
+        <div class="footer-buttons" *ngIf="selectedOption !== 'ia'">
+          <ion-button expand="block" (click)="addFila()" class="ion-margin">
+            Añadir
+          </ion-button>
+        </div>
+      </ion-toolbar>
+    </ion-footer>
   </ng-template>
 </ion-modal>

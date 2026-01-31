@@ -18,17 +18,36 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    let user = localStorage.getItem('user');
     return new Promise((resolve) => {
-      this.firebaseSvc.getAuth().onAuthStateChanged((auth) => {
+      // Intento inmediato
+      const currentUser = this.firebaseSvc.getAuth().currentUser;
+      if (currentUser) {
+        resolve(true);
+        return;
+      }
+
+      // Esperar cambio de estado
+      const unsubscribe = this.firebaseSvc.getAuth().onAuthStateChanged((auth) => {
+        unsubscribe();
         if (auth) {
-          if (user) resolve(true);
-        }
-        else{
+          resolve(true);
+        } else {
           this.firebaseSvc.signOut();
           resolve(false);
         }
       });
+
+      // Timeout de seguridad
+      setTimeout(() => {
+        unsubscribe();
+        // Si hay un usuario en localStorage, intentamos dejarlo pasar para no bloquear
+        const user = localStorage.getItem('user');
+        if (user) resolve(true);
+        else {
+          this.firebaseSvc.signOut();
+          resolve(false);
+        }
+      }, 3000);
     });
   }
 
